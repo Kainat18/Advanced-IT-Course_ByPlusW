@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agile, Waterfall, Lean Agile Quiz Game</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+
+        .game-container {
+            text-align: center;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #4caf50;
+        }
+
+        .question {
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+
+        .answers {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .answer-button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 18px;
+            border: none;
+            margin: 10px 0;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .answer-button:hover {
+            background-color: #45a049;
+        }
+
+        .score {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .next-button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .next-button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Agile, Waterfall & Lean Agile Quiz Game</h1>
+        <div id="question-container">
+            <p class="question" id="question">Loading question...</p>
+            <ul class="answers" id="answers">
+                <!-- Answer buttons will be injected here -->
+            </ul>
+        </div>
+        <button class="next-button" id="next-button" onclick="loadNextQuestion()">Next Question</button>
+        <div class="score" id="score">Score: 0</div>
+    </div>
+
+    <script>
+        const questions = {
+            Waterfall: [
+                {
+                    question: "What is the first phase of the Waterfall methodology?",
+                    answers: [
+                        { text: "Design", isCorrect: false },
+                        { text: "Requirements Gathering", isCorrect: true },
+                        { text: "Testing", isCorrect: false },
+                        { text: "Implementation", isCorrect: false }
+                    ]
+                },
+                {
+                    question: "Which phase happens after the testing phase in Waterfall?",
+                    answers: [
+                        { text: "Implementation", isCorrect: false },
+                        { text: "Deployment", isCorrect: true },
+                        { text: "Design", isCorrect: false },
+                        { text: "Requirements Gathering", isCorrect: false }
+                    ]
+                }
+            ],
+            Agile: [
+                {
+                    question: "In Agile, what is a Sprint?",
+                    answers: [
+                        { text: "A planning phase", isCorrect: false },
+                        { text: "A short, time-boxed iteration", isCorrect: true },
+                        { text: "A review phase", isCorrect: false },
+                        { text: "A testing phase", isCorrect: false }
+                    ]
+                },
+                {
+                    question: "Who is responsible for the product backlog in Agile?",
+                    answers: [
+                        { text: "The Scrum Master", isCorrect: false },
+                        { text: "The Product Owner", isCorrect: true },
+                        { text: "The Development Team", isCorrect: false },
+                        { text: "The Project Manager", isCorrect: false }
+                    ]
+                }
+            ],
+            LeanAgile: [
+                {
+                    question: "What is the main focus of Lean Agile?",
+                    answers: [
+                        { text: "Reducing project cost", isCorrect: false },
+                        { text: "Improving efficiency by eliminating waste", isCorrect: true },
+                        { text: "Focusing on large releases", isCorrect: false },
+                        { text: "Ensuring detailed documentation", isCorrect: false }
+                    ]
+                },
+                {
+                    question: "In Lean Agile, what does eliminating waste mean?",
+                    answers: [
+                        { text: "Removing unnecessary steps and delays", isCorrect: true },
+                        { text: "Reducing the number of meetings", isCorrect: false },
+                        { text: "Using fewer resources", isCorrect: false },
+                        { text: "Focusing on a single feature", isCorrect: false }
+                    ]
+                }
+            ]
+        };
+
+        let currentScore = 0;
+        let currentLevel = 'Waterfall'; // Start with Waterfall level
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const questionData = questions[currentLevel][currentQuestionIndex];
+            const questionElement = document.getElementById('question');
+            const answersElement = document.getElementById('answers');
+            const nextButton = document.getElementById('next-button');
+
+            // Set the question
+            questionElement.textContent = questionData.question;
+
+            // Clear the previous answers
+            answersElement.innerHTML = '';
+
+            // Add the answer buttons
+            questionData.answers.forEach((answer, index) => {
+                const button = document.createElement('button');
+                button.classList.add('answer-button');
+                button.textContent = answer.text;
+                button.onclick = () => checkAnswer(answer, nextButton);
+                answersElement.appendChild(button);
+            });
+
+            // Hide the "Next" button initially
+            nextButton.style.display = 'none';
+        }
+
+        function checkAnswer(answer, nextButton) {
+            if (answer.isCorrect) {
+                currentScore++;
+                document.getElementById('score').textContent = `Score: ${currentScore}`;
+            }
+            nextButton.style.display = 'block';
+        }
+
+        function loadNextQuestion() {
+            currentQuestionIndex++;
+
+            if (currentQuestionIndex < questions[currentLevel].length) {
+                loadQuestion();
+            } else {
+                if (currentLevel === 'Waterfall') {
+                    currentLevel = 'Agile';
+                    currentQuestionIndex = 0;
+                    alert('Level 1 complete! Now moving to Agile!');
+                } else if (currentLevel === 'Agile') {
+                    currentLevel = 'LeanAgile';
+                    currentQuestionIndex = 0;
+                    alert('Level 2 complete! Now moving to Lean Agile!');
+                } else {
+                    alert('Congratulations! You have completed all levels!');
+                }
+            }
+        }
+
+        loadQuestion(); // Initial load of question
+    </script>
+</body>
+</html>

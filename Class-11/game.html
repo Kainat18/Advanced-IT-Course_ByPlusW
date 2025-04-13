@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GitFlow Adventure Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e2f;
+      color: white;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      color: #00d8ff;
+      margin-bottom: 10px;
+    }
+    .git-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px auto;
+      max-width: 600px;
+    }
+    button {
+      padding: 12px 18px;
+      background-color: #00d8ff;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #00aacc;
+    }
+    #log {
+      background-color: #2e2e3e;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 30px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    #log ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    #log li {
+      padding: 6px 0;
+      border-bottom: 1px solid #444;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🚀 GitFlow Adventure</h1>
+  <p>Click buttons in the correct GitFlow order!</p>
+
+  <div class="git-box">
+    <button onclick="startFeature()">Start Feature</button>
+    <button onclick="commitFeature()">Commit Feature</button>
+    <button onclick="mergeToDevelop()">Merge to Develop</button>
+    <button onclick="startRelease()">Start Release</button>
+    <button onclick="mergeToMain()">Merge to Main</button>
+    <button onclick="tagRelease()">Tag Release</button>
+    <button onclick="startHotfix()">Start Hotfix</button>
+    <button onclick="mergeHotfix()">Merge Hotfix</button>
+  </div>
+
+  <div id="log">
+    <strong>Game Log:</strong>
+    <ul id="logList"></ul>
+  </div>
+
+  <script>
+    let featureStarted = false;
+    let featureCommitted = false;
+    let mergedToDevelop = false;
+    let releaseStarted = false;
+    let mergedToMain = false;
+    let tagged = false;
+    let hotfixStarted = false;
+    let hotfixMerged = false;
+
+    function log(msg) {
+      const logList = document.getElementById("logList");
+      const item = document.createElement("li");
+      item.textContent = msg;
+      logList.appendChild(item);
+    }
+
+    function startFeature() {
+      if (!featureStarted) {
+        featureStarted = true;
+        log("🔧 Feature branch created from develop.");
+      } else {
+        log("⚠️ Feature already started.");
+      }
+    }
+
+    function commitFeature() {
+      if (featureStarted && !featureCommitted) {
+        featureCommitted = true;
+        log("✅ Committed changes to feature branch.");
+      } else if (!featureStarted) {
+        log("❌ Start the feature branch first.");
+      } else {
+        log("⚠️ Already committed.");
+      }
+    }
+
+    function mergeToDevelop() {
+      if (featureCommitted && !mergedToDevelop) {
+        mergedToDevelop = true;
+        log("🔁 Feature merged into develop.");
+      } else if (!featureCommitted) {
+        log("❌ Commit the feature before merging.");
+      } else {
+        log("⚠️ Already merged to develop.");
+      }
+    }
+
+    function startRelease() {
+      if (mergedToDevelop && !releaseStarted) {
+        releaseStarted = true;
+        log("📦 Release branch created from develop.");
+      } else if (!mergedToDevelop) {
+        log("❌ Merge feature to develop before starting release.");
+      } else {
+        log("⚠️ Release already started.");
+      }
+    }
+
+    function mergeToMain() {
+      if (releaseStarted && !mergedToMain) {
+        mergedToMain = true;
+        log("🚀 Release merged into main and develop.");
+      } else if (!releaseStarted) {
+        log("❌ Start the release branch first.");
+      } else {
+        log("⚠️ Already merged to main.");
+      }
+    }
+
+    function tagRelease() {
+      if (mergedToMain && !tagged) {
+        tagged = true;
+        log("🏷️ Tagged release as v1.0.0.");
+      } else if (!mergedToMain) {
+        log("❌ Merge release to main before tagging.");
+      } else {
+        log("⚠️ Already tagged.");
+      }
+    }
+
+    function startHotfix() {
+      if (!hotfixStarted) {
+        hotfixStarted = true;
+        log("🚨 Hotfix branch created from main.");
+      } else {
+        log("⚠️ Hotfix already started.");
+      }
+    }
+
+    function mergeHotfix() {
+      if (hotfixStarted && !hotfixMerged) {
+        hotfixMerged = true;
+        log("🛠️ Hotfix merged into main and develop.");
+      } else if (!hotfixStarted) {
+        log("❌ Start a hotfix first.");
+      } else {
+        log("⚠️ Already merged hotfix.");
+      }
+    }
+  </script>
+
+</body>
+</html>
